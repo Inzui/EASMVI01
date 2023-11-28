@@ -1,20 +1,33 @@
 from photoProcessor import PhotoProcessor
 from dataSetService import DataSetService
-from os.path import *
+import os
 
 class Main():
-    def __init__(self, dataSetDir: str) -> None:
-        self.dataSetDir = dataSetDir
+    def __init__(self, identifiersDir: str, dataSetType: str) -> None:
+        self.identifiersDir = identifiersDir
+        self.dataSetType = dataSetType
+
         self.photoProcessor = PhotoProcessor()
-        self.dataSet = DataSetService(dataSetDir, "Training.csv")
+        self.dataSet = DataSetService(identifiersDir, f"{self.dataSetType}.csv")
 
     def run(self):
-        pass
+        df = self.dataSet.load()
+        print(df)
     
     def picturesToDataSet(self):
-        self.dataSet.append('A', self.photoProcessor.run(f"{self.dataSetDir}\\Training\\A\\A.1.png"))
+        dataSetDir = os.path.join(self.identifiersDir, self.dataSetType)
+        self.dataSet.clear()
+
+        identifiers = os.listdir(dataSetDir)
+        for identifier in identifiers:
+            pictures = os.listdir(os.path.join(dataSetDir, identifier))
+            for pictureName in pictures:
+                try:
+                    self.dataSet.append(identifier, self.photoProcessor.run(os.path.join(dataSetDir, identifier, pictureName)))
+                except Exception as e:
+                    print(f"Rejected: '{pictureName}', reason: '{e}'")
 
 if __name__ == "__main__":
-    main = Main(f"{dirname(realpath(__file__))}\\Dataset")
+    main = Main(f"{os.path.dirname(os.path.realpath(__file__))}\\Dataset", "Training")
+    # main.picturesToDataSet()
     main.run()
-    main.picturesToDataSet()

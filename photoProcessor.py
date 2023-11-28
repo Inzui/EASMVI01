@@ -38,6 +38,9 @@ class PhotoProcessor:
         return (min(yCoordinates) - self.cropMargin, max(yCoordinates) + self.cropMargin, min(xCoordinates) - self.cropMargin, max(xCoordinates) + self.cropMargin)
     
     def getJointCoordinates(self, img, processedImage) -> []:
+        if (processedImage.multi_hand_landmarks == None):
+            raise Exception("Could not identify a hand")  
+         
         coordinates = []
         if processedImage.multi_hand_landmarks:
             for handLms in processedImage.multi_hand_landmarks:
