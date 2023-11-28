@@ -3,18 +3,18 @@ from dataSetService import DataSetService
 from os.path import *
 
 class Main():
-    def __init__(self, photoProcessor: PhotoProcessor, dataSet: DataSetService) -> None:
-        self.photoProcessor = photoProcessor
-        self.dataSet = dataSet
+    def __init__(self, dataSetDir: str) -> None:
+        self.dataSetDir = dataSetDir
+        self.photoProcessor = PhotoProcessor()
+        self.dataSet = DataSetService(dataSetDir, "Training.csv")
 
     def run(self):
-        self.dataSet.append(None, None)
-        # for i in range(50):
-        #     try:
-        #         print(self.photoProcessor.run(f"C:\\Users\\ianzu\\OneDrive - Hogeschool Rotterdam\\Machine Vision\\Dataset\\Training\\A\\A.{i}.png"))
-        #     except:
-        #         print(f"Rejected image '{i}'")
+        pass
+    
+    def picturesToDataSet(self):
+        self.dataSet.append('A', self.photoProcessor.run(f"{self.dataSetDir}\\Training\\A\\A.1.png"))
 
 if __name__ == "__main__":
-    main = Main(PhotoProcessor(), DataSetService(f"{dirname(realpath(__file__))}\\Dataset", "Training.csv"))
+    main = Main(f"{dirname(realpath(__file__))}\\Dataset")
     main.run()
+    main.picturesToDataSet()

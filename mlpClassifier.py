@@ -1,8 +1,8 @@
 import pandas as pd
 
 class MLPClassifier:
-    def __init__(self, fileLocation):
-        self.df = pd.read_csv(fileLocation)
+    def __init__(self, dataFrame: pd.DataFrame):
+        self.df = dataFrame
     
     def run(self):
         pass
