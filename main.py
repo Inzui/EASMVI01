@@ -7,7 +7,7 @@ class Main():
     def run(self):
         for i in range(50):
             try:
-                print(self.photoProcessor.run(f"C:\\Users\\ianzu\\OneDrive - Hogeschool Rotterdam\\Machine Vision\\Dataset\\Training\\A\\A.{i}.png"))
+                print(self.photoProcessor.run(f"C:\\Users\\jurre\\OneDrive - Hogeschool Rotterdam\\Machine Vision\\Dataset\\Training\\A\\A.{i}.png"))
             except:
                 print(f"Rejected image '{i}'")
 
