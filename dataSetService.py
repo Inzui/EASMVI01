@@ -7,7 +7,7 @@ class DataSetService():
         self._filePath = os.path.join(directory, dataSetType, f"{dataSetType}.csv")
 
         if (not os.path.isdir(self._directory)):
-            os.path.os.mkdir(self._directory)
+            os.mkdir(self._directory)
 
     def append(self, identifier: str, coordinatesList: [()]):
         """Appends a line of coordinates to the Data Set CSV. In format 'x0; y0; x1; y1; ...; identifier;'"""
