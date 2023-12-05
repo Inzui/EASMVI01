@@ -1,9 +1,10 @@
 import os, pandas
 
 class DataSetService():
-    def __init__(self, directory: str, fileName: str) -> None:
+    def __init__(self, directory: str, dataSetType: str) -> None:
+        self.dataSetType = dataSetType
         self._directory = directory
-        self._filePath = os.path.join(directory, fileName)
+        self._filePath = os.path.join(directory, dataSetType, f"{dataSetType}.csv")
 
         if (not os.path.isdir(self._directory)):
             os.path.os.mkdir(self._directory)
@@ -13,7 +14,7 @@ class DataSetService():
         line = ""
         for coordinates in coordinatesList:
             line = f"{line}{coordinates[0]};{coordinates[1]};"
-        line = f"{line}{identifier};"
+        line = f"{line}{identifier}"
 
         file = open(self._filePath, 'a')
         file.write(f"{line}\n")
@@ -21,7 +22,7 @@ class DataSetService():
 
     def load(self) -> pandas.DataFrame:
         """Loads the Pandas DataFrame from the Data Set CSV."""
-        return pandas.read_csv(self._filePath)
+        return pandas.read_csv(self._filePath, sep = ';')
 
     def clear(self):
         """Clears the Data Set CSV."""
@@ -31,3 +32,7 @@ class DataSetService():
         file = open(self._filePath, 'w')
         file.write(f"{line}identifier\n")
         file.close()
+
+    def exists(self) -> bool:
+        """Returns if the data set CSV exists."""
+        return os.path.isfile(self._filePath)
