@@ -23,7 +23,7 @@ class Classifier:
         self.model = self.createModel(X_train, Y_train, X_val, Y_val)
 
     def createModel(self, X_train : pd.DataFrame, y_train : pd.DataFrame, X_val : pd.DataFrame, y_val : pd.DataFrame):
-        mlp = MLPClassifier(activation='relu', solver='adam', hidden_layer_sizes=(100, 50), max_iter=10)
+        mlp = MLPClassifier(activation='relu', solver='sgd', random_state=1, hidden_layer_sizes=(100, 50), max_iter=100, early_stopping=True, warm_start=False)
         mlp.fit(X_train, y_train)
         print(mlp.score(X_val, y_val))
         return mlp
