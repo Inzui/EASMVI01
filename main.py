@@ -36,7 +36,8 @@ class Main():
             deltaS = (datetime.now() - lastCaptureTime).total_seconds()
             if (deltaS > 1/FRAMES_PER_SECOND):
                 try:
-                    coordinates = self.photoProcessor.run(frame)
+                    coordinates = DataSetService.unpack(self.photoProcessor.run(frame))
+                    print(coordinates)
                 except Exception as e:
                     print(e)
                 finally:
