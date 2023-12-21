@@ -22,7 +22,8 @@ class Classifier:
             
             normData = self.normalizeInputData(data)
 
-            print(self.identifiers[self.model.predict([normData])[0]])
+            prediction = self.identifiers[self.model.predict([normData])[0]]
+            return prediction
 
         else:
             raise Exception("No Model has been created.")

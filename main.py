@@ -24,21 +24,19 @@ class Main():
             print("Test CSV does not exist.")
             self._picturesToDataSet(self.testDataSet)
 
-        # self.classifier = Classifier()
-        # #self.classifier.train(self.trainingDataSet.load(), self.testDataSet.load())
-
-        # #testData = self.testDataSet.load().iloc[401].to_list()
-        # testData = [137, 391, 166, 379, 192, 345, 210, 323, 225, 314, 173, 289, 186, 250, 195, 227, 202, 205, 155, 283, 175, 294, 173, 328, 163, 339, 139, 291, 160, 313, 159, 342, 151, 346, 126, 307, 145, 334, 147, 353, 141, 354]
-
-        # self.classifier.run(testData)
+        self.classifier = Classifier()
+        # self.classifier.train(self.trainingDataSet.load(), self.testDataSet.load())
         
         # Get pictures from webcam and use as input.
         print("Loading camera")
         cam = cv2.VideoCapture(0)
         lastCaptureTime = datetime.now()
+        prediction = ""
+
         while True:
             _, frame = cam.read()
             frame = cv2.resize(frame, None, fx=1.5, fy=1.5, interpolation=cv2.INTER_AREA)
+            cv2.putText(frame, f"Prediction: {prediction}", (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
             cv2.imshow('Input', frame)
 
             deltaS = (datetime.now() - lastCaptureTime).total_seconds()
@@ -46,7 +44,12 @@ class Main():
                 try:
                     coordinates = DataSetService.unpack(self.photoProcessor.run(frame))
                     print(coordinates)
+                    prediction = self.classifier.run(coordinates)
+                    print(prediction)
+                    
+
                 except Exception as e:
+                    prediction = ""
                     print(e)
                 finally:
                     lastCaptureTime = datetime.now()
