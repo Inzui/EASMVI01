@@ -36,3 +36,8 @@ class DataSetService():
     def exists(self) -> bool:
         """Returns if the data set CSV exists."""
         return os.path.isfile(self._filePath)
+    
+    @staticmethod
+    def unpack(coordinatesList: [()]) -> []:
+        """Unpacks a coordinates list from [()] to [x0, y0, x1, y, ...]"""
+        return [coordinate for coordinates in coordinatesList for coordinate in coordinates]

@@ -1,4 +1,4 @@
-import cv2
+import cv2, numpy
 import mediapipe as mp
 
 class PhotoProcessor:
@@ -8,36 +8,42 @@ class PhotoProcessor:
         self.hands = self.mpHands.Hands()
         self.mpDraw = mp.solutions.drawing_utils
 
-    def run(self, imagePath, showImage = False):
-        image = cv2.imread(imagePath) 
-        processedImage = self.processImage(image)
-        imageBorders = self.getImageBorders(image, processedImage)
+    def run(self, arg1, showImage: bool = False):
+        if (isinstance(arg1, str)):
+            image = cv2.imread(arg1)
+            return self._run(image, showImage)
+        else:
+            return self._run(arg1, showImage)
+
+    def _run(self, image: numpy.ndarray, showImage: bool):
+        processedImage = self._processImage(image)
+        imageBorders = self._getImageBorders(image, processedImage)
         croppedImage = image[imageBorders[0]:imageBorders[1], imageBorders[2]:imageBorders[3]]
 
         if (showImage):
-            self.drawHandConnections(image, processedImage)
+            self._drawHandConnections(image, processedImage)
             cv2.imshow("Test", croppedImage)
             cv2.waitKey(0)
             cv2.destroyAllWindows()
         
-        jointCoordinates = self.getJointCoordinates(croppedImage, processedImage)
+        jointCoordinates = self._getJointCoordinates(croppedImage, processedImage)
         if (len(jointCoordinates) != 21):
             raise Exception("Too few/many joints")
 
         return jointCoordinates
 
-    def processImage(self, img):
+    def _processImage(self, img):
         grayImage = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         return self.hands.process(grayImage)
     
-    def getImageBorders(self, img, processedImage) -> ():
-        jointCoordinates = self.getJointCoordinates(img, processedImage)
+    def _getImageBorders(self, img, processedImage) -> ():
+        jointCoordinates = self._getJointCoordinates(img, processedImage)
         xCoordinates = [x[0] for x in jointCoordinates]
         yCoordinates = [y[1] for y in jointCoordinates]
 
         return (min(yCoordinates) - self.cropMargin, max(yCoordinates) + self.cropMargin, min(xCoordinates) - self.cropMargin, max(xCoordinates) + self.cropMargin)
     
-    def getJointCoordinates(self, img, processedImage) -> []:
+    def _getJointCoordinates(self, img, processedImage) -> []:
         if (processedImage.multi_hand_landmarks == None):
             raise Exception("Could not identify a hand")  
          
@@ -50,7 +56,7 @@ class PhotoProcessor:
                     coordinates.append((cx, cy))
             return coordinates
 
-    def drawHandConnections(self, img, results):
+    def _drawHandConnections(self, img, results):
         if results.multi_hand_landmarks:
             for handLms in results.multi_hand_landmarks:
                 for id, lm in enumerate(handLms.landmark):

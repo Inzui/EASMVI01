@@ -1,7 +1,10 @@
 from photoProcessor import PhotoProcessor
 from dataSetService import DataSetService
 from classifier import Classifier
-import os
+from datetime import datetime
+import os, cv2
+
+FRAMES_PER_SECOND = 2
 
 class Main():
     def __init__(self, identifiersDir: str) -> None:
@@ -21,13 +24,36 @@ class Main():
             print("Test CSV does not exist.")
             self._picturesToDataSet(self.testDataSet)
 
-        self.classifier = Classifier()
-        #self.classifier.train(self.trainingDataSet.load(), self.testDataSet.load())
+        # self.classifier = Classifier()
+        # #self.classifier.train(self.trainingDataSet.load(), self.testDataSet.load())
 
-        #testData = self.testDataSet.load().iloc[401].to_list()
-        testData = [137, 391, 166, 379, 192, 345, 210, 323, 225, 314, 173, 289, 186, 250, 195, 227, 202, 205, 155, 283, 175, 294, 173, 328, 163, 339, 139, 291, 160, 313, 159, 342, 151, 346, 126, 307, 145, 334, 147, 353, 141, 354]
+        # #testData = self.testDataSet.load().iloc[401].to_list()
+        # testData = [137, 391, 166, 379, 192, 345, 210, 323, 225, 314, 173, 289, 186, 250, 195, 227, 202, 205, 155, 283, 175, 294, 173, 328, 163, 339, 139, 291, 160, 313, 159, 342, 151, 346, 126, 307, 145, 334, 147, 353, 141, 354]
 
-        self.classifier.run(testData)
+        # self.classifier.run(testData)
+        
+        # Get pictures from webcam and use as input.
+        print("Loading camera")
+        cam = cv2.VideoCapture(0)
+        lastCaptureTime = datetime.now()
+        while True:
+            _, frame = cam.read()
+            frame = cv2.resize(frame, None, fx=1.5, fy=1.5, interpolation=cv2.INTER_AREA)
+            cv2.imshow('Input', frame)
+
+            deltaS = (datetime.now() - lastCaptureTime).total_seconds()
+            if (deltaS > 1/FRAMES_PER_SECOND):
+                try:
+                    coordinates = DataSetService.unpack(self.photoProcessor.run(frame))
+                    print(coordinates)
+                except Exception as e:
+                    print(e)
+                finally:
+                    lastCaptureTime = datetime.now()
+
+            c = cv2.waitKey(1)
+            if c == 27:
+                break
     
     def _picturesToDataSet(self, dataSet: DataSetService):
         print(f"Converting pictures from '{dataSet.dataSetType}' to CSV.")
