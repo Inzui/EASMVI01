@@ -25,7 +25,7 @@ class Main():
             self._picturesToDataSet(self.testDataSet)
 
         self.classifier = Classifier()
-        # self.classifier.train(self.trainingDataSet.load(), self.testDataSet.load())
+        self.classifier.train(self.trainingDataSet.load(), self.testDataSet.load())
         
         # Get pictures from webcam and use as input.
         print("Loading camera")
@@ -46,7 +46,6 @@ class Main():
                     print(coordinates)
                     prediction = self.classifier.run(coordinates)
                     print(prediction)
-                    
 
                 except Exception as e:
                     prediction = ""
