@@ -57,7 +57,7 @@ class PhotoProcessor:
         return math.degrees(math.atan2(y2-y1, x2-x1)) + 90
 
     def _detectHands(self, image: numpy.ndarray, minDetectionConfidence: float = 0.5, minTrackingConfidence: float = 0.5, maxNumHands: int = 1):
-        with self.mpHands.Hands(min_detection_confidence = minDetectionConfidence, min_tracking_confidence = minDetectionConfidence, max_num_hands = maxNumHands) as hands:
+        with self.mpHands.Hands(min_detection_confidence = minDetectionConfidence, min_tracking_confidence = minTrackingConfidence, max_num_hands = maxNumHands) as hands:
             image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
             image.flags.writeable = False
             results = hands.process(image)
