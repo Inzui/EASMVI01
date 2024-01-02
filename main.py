@@ -19,10 +19,10 @@ class Main():
         # Convert pictures to CSV
         if (forceConvert or not self.trainingDataSet.exists()):
             print("Training CSV does not exist.")
-            self._picturesToDataSet(self.trainingDataSet)
+            self.__picturesToDataSet(self.trainingDataSet)
         if (forceConvert or not self.testDataSet.exists()):
             print("Test CSV does not exist.")
-            self._picturesToDataSet(self.testDataSet)
+            self.__picturesToDataSet(self.testDataSet)
 
         self.classifier = Classifier()
         self.classifier.train(self.trainingDataSet.load(), self.testDataSet.load())
@@ -57,7 +57,7 @@ class Main():
             if c == 27:
                 break
     
-    def _picturesToDataSet(self, dataSet: DataSetService):
+    def __picturesToDataSet(self, dataSet: DataSetService):
         print(f"Converting pictures from '{dataSet.dataSetType}' to CSV.")
         dataSetDir = os.path.join(self.identifiersDir, dataSet.dataSetType)
         dataSet.clear()
