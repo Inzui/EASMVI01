@@ -2,7 +2,7 @@ from photoProcessor import PhotoProcessor
 from dataSetService import DataSetService
 from classifier import Classifier
 from datetime import datetime
-import os, cv2
+import os, cv2, argparse
 
 FRAMES_PER_SECOND = 2
 
@@ -73,5 +73,11 @@ class Main():
                     print(f"Rejected: '{pictureName}', reason: '{e}'")
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description = "EASMVI01 Assignment for recognizing Dutch sign language.")
+    parser.add_argument("-fc", "--forceConvert", action = "store_true", help = "Force the conversion of training and test images to CSV.")
+    parser.add_argument("-ft", "--forceTrain", action = "store_true", help = "Force the training of the Machine Learning Model, even if one already exists.")
+    parser.add_argument("-si", "--showImages", action = "store_true", help = "Shows the detected hand with drawn landmarks while running.")
+    args = parser.parse_args()
+
     main = Main(f"{os.path.dirname(os.path.realpath(__file__))}\\DataSet",)
-    main.run()
+    main.run(args.forceConvert, args.forceTrain, args.showImages)
