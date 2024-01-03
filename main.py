@@ -15,7 +15,7 @@ class Main():
         self.testDataSet = DataSetService(identifiersDir, "Validation")
         self.classifier: Classifier = None
 
-    def run(self, forceConvert: bool = False):
+    def run(self, forceConvert: bool = False, forceTrain: bool = False, showImages: bool = False):
         # Convert pictures to CSV
         if (forceConvert or not self.trainingDataSet.exists()):
             print("Training CSV does not exist.")
@@ -25,7 +25,8 @@ class Main():
             self.__picturesToDataSet(self.testDataSet)
 
         self.classifier = Classifier()
-        self.classifier.train(self.trainingDataSet.load(), self.testDataSet.load())
+        if (forceTrain or not os.path.isfile(self.classifier.filename)):
+            self.classifier.train(self.trainingDataSet.load(), self.testDataSet.load())
         
         # Get pictures from webcam and use as input.
         print("Loading camera")
@@ -42,7 +43,7 @@ class Main():
             deltaS = (datetime.now() - lastCaptureTime).total_seconds()
             if (deltaS > 1/FRAMES_PER_SECOND):
                 try:
-                    coordinates = DataSetService.unpack(self.photoProcessor.run(frame))
+                    coordinates = DataSetService.unpack(self.photoProcessor.run(frame, showImages))
                     print(coordinates)
                     prediction = self.classifier.run(coordinates)
                     print(prediction)
@@ -71,8 +72,6 @@ class Main():
                 except Exception as e:
                     print(f"Rejected: '{pictureName}', reason: '{e}'")
 
-    
-
 if __name__ == "__main__":
-    main = Main(f"{os.path.dirname(os.path.realpath(__file__))}\\DataSet")
+    main = Main(f"{os.path.dirname(os.path.realpath(__file__))}\\DataSet",)
     main.run()
