@@ -2,7 +2,7 @@ from photoProcessor import PhotoProcessor
 from dataSetService import DataSetService
 from classifier import Classifier
 from datetime import datetime
-import os, cv2
+import os, cv2, argparse
 
 FRAMES_PER_SECOND = 2
 
@@ -15,17 +15,18 @@ class Main():
         self.testDataSet = DataSetService(identifiersDir, "Validation")
         self.classifier: Classifier = None
 
-    def run(self, forceConvert: bool = False):
+    def run(self, forceConvert: bool = False, forceTrain: bool = False, showImages: bool = False):
         # Convert pictures to CSV
         if (forceConvert or not self.trainingDataSet.exists()):
             print("Training CSV does not exist.")
-            self._picturesToDataSet(self.trainingDataSet)
+            self.__picturesToDataSet(self.trainingDataSet)
         if (forceConvert or not self.testDataSet.exists()):
             print("Test CSV does not exist.")
-            self._picturesToDataSet(self.testDataSet)
+            self.__picturesToDataSet(self.testDataSet)
 
         self.classifier = Classifier()
-        # self.classifier.train(self.trainingDataSet.load(), self.testDataSet.load())
+        if (forceTrain or not os.path.isfile(self.classifier.filename)):
+            self.classifier.train(self.trainingDataSet.load(), self.testDataSet.load())
         
         # Get pictures from webcam and use as input.
         print("Loading camera")
@@ -42,11 +43,10 @@ class Main():
             deltaS = (datetime.now() - lastCaptureTime).total_seconds()
             if (deltaS > 1/FRAMES_PER_SECOND):
                 try:
-                    coordinates = DataSetService.unpack(self.photoProcessor.run(frame))
+                    coordinates = DataSetService.unpack(self.photoProcessor.run(frame, showImages))
                     print(coordinates)
                     prediction = self.classifier.run(coordinates)
                     print(prediction)
-                    
 
                 except Exception as e:
                     prediction = ""
@@ -58,7 +58,7 @@ class Main():
             if c == 27:
                 break
     
-    def _picturesToDataSet(self, dataSet: DataSetService):
+    def __picturesToDataSet(self, dataSet: DataSetService):
         print(f"Converting pictures from '{dataSet.dataSetType}' to CSV.")
         dataSetDir = os.path.join(self.identifiersDir, dataSet.dataSetType)
         dataSet.clear()
@@ -72,8 +72,12 @@ class Main():
                 except Exception as e:
                     print(f"Rejected: '{pictureName}', reason: '{e}'")
 
-    
-
 if __name__ == "__main__":
-    main = Main(f"{os.path.dirname(os.path.realpath(__file__))}\\DataSet")
-    main.run()
+    parser = argparse.ArgumentParser(description = "EASMVI01 Assignment for recognizing Dutch sign language.")
+    parser.add_argument("-fc", "--forceConvert", action = "store_true", help = "Force the conversion of training and test images to CSV.")
+    parser.add_argument("-ft", "--forceTrain", action = "store_true", help = "Force the training of the Machine Learning Model, even if one already exists.")
+    parser.add_argument("-si", "--showImages", action = "store_true", help = "Shows the detected hand with drawn landmarks while running.")
+    args = parser.parse_args()
+
+    main = Main(f"{os.path.dirname(os.path.realpath(__file__))}\\DataSet",)
+    main.run(args.forceConvert, args.forceTrain, args.showImages)
