@@ -10,7 +10,7 @@ class DataSetService():
             os.mkdir(self._directory)
 
     def append(self, identifier: str, coordinatesList: [()]):
-        """Appends a line of coordinates to the Data Set CSV. In format 'x0; y0; x1; y1; ...; identifier;'"""
+        """Appends a line of coordinates to the Data Set CSV. In format 'x0; y0; x1; y1; ...; x20; y20; identifier;'"""
         line = ""
         for coordinates in coordinatesList:
             line = f"{line}{coordinates[0]};{coordinates[1]};"
