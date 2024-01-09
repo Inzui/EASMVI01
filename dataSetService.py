@@ -37,6 +37,21 @@ class DataSetService():
         """Returns if the data set CSV exists."""
         return os.path.isfile(self._filePath)
     
+    def renumber(self, identifier):
+        """Renumbers the pictures in the dataset from 0 to n."""
+        picturesDir = os.path.join(self._directory, self.dataSetType, identifier)
+        pictures = os.listdir(picturesDir)
+        
+        # First rename all files to prevent double names.
+        for picture in pictures:
+            os.rename(os.path.join(picturesDir, picture), os.path.join(picturesDir, f"x{picture}"))
+
+        # Renumber all files.
+        index = 0
+        for picture in pictures:
+            os.rename(os.path.join(picturesDir, f"x{picture}"), os.path.join(picturesDir, f"{identifier}.{index}.png"))
+            index += 1
+    
     @staticmethod
     def unpack(coordinatesList: [()]) -> []:
         """Unpacks a coordinates list from [()] to [x0, y0, x1, y, ...]"""

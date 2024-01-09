@@ -70,7 +70,9 @@ class Main():
                 try:
                     dataSet.append(identifier, self.photoProcessor.run(os.path.join(dataSetDir, identifier, pictureName)))
                 except Exception as e:
-                    print(f"Rejected: '{pictureName}', reason: '{e}'")
+                    print(f"Removing: '{pictureName}', reason: '{e}'")
+                    os.remove(os.path.join(dataSetDir, identifier, pictureName))
+            dataSet.renumber(identifier)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description = "EASMVI01 Assignment for recognizing Dutch sign language.")
