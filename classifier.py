@@ -51,8 +51,9 @@ class Classifier:
 
     def createModel(self, X_train : pd.DataFrame, y_train : pd.DataFrame, X_test : pd.DataFrame, y_test : pd.DataFrame):
         print("Creating Model")
-        #mlp = MLPClassifier(activation='relu', solver='adam', random_state=1, hidden_layer_sizes=(1000, 2000), max_iter=100, early_stopping=True, warm_start=False)
-        mlp = MLPClassifier(activation='relu', solver='adam', random_state=1, hidden_layer_sizes=(1500, 2000), max_iter=1000, early_stopping=False, warm_start=False)
+        #mlp = MLPClassifier(activation='relu', solver='adam', random_state=1, hidden_layer_sizes=(550, 300), max_iter=1000, early_stopping=False, warm_start=False)
+        mlp = MLPClassifier(activation='relu', solver='adam', random_state=1, hidden_layer_sizes=(550, 300), max_iter=500, early_stopping=False, warm_start=False)
+
         mlp.fit(X_train, y_train)
         print(f"Model Score: {mlp.score(X_test, y_test)}")
         return mlp
