@@ -3,6 +3,7 @@ from datetime import datetime
 
 IDENTIFIER = "A"
 AMOUNT_OF_PICTURES = 50
+BEGIN_INDEX = 0
 FRAMES_PER_SECOND = 4
 
 print("Loading camera")
@@ -12,7 +13,7 @@ if (not os.path.exists(saveToPath)):
     os.makedirs(saveToPath)
 
 lastCaptureTime = datetime.now()
-capturedImages = 0
+capturedImages = BEGIN_INDEX
 while True:
     ret, frame = cam.read()
     frame = cv2.resize(frame, None, fx=1.5, fy=1.5, interpolation=cv2.INTER_AREA)
