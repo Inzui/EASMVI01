@@ -21,7 +21,7 @@ class Main():
             print("Training CSV does not exist.")
             self.__picturesToDataSet(self.trainingDataSet)
         if (forceConvert or not self.testDataSet.exists()):
-            print("Test CSV does not exist.")
+            print("Validation CSV does not exist.")
             self.__picturesToDataSet(self.testDataSet)
 
         self.classifier = Classifier()
@@ -65,6 +65,7 @@ class Main():
 
         identifiers = [identifier for identifier in os.listdir(dataSetDir) if os.path.isdir(os.path.join(dataSetDir, identifier))]
         for identifier in identifiers:
+            print(f"Converting '{identifier}'")
             pictures = os.listdir(os.path.join(dataSetDir, identifier))
             for pictureName in pictures:
                 try:

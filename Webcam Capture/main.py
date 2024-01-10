@@ -1,9 +1,9 @@
 import cv2, os
 from datetime import datetime
 
-IDENTIFIER = "I"
-AMOUNT_OF_PICTURES = 100
-BEGIN_INDEX = 20
+IDENTIFIER = "R"
+AMOUNT_OF_PICTURES = 50
+BEGIN_INDEX = 1
 FRAMES_PER_SECOND = 4
 
 print("Loading camera")
