@@ -32,12 +32,12 @@ class Main():
         print("Loading camera")
         cam = cv2.VideoCapture(0)
         lastCaptureTime = datetime.now()
-        prediction = ""
+        prediction = ("?", "")
 
         while True:
             _, frame = cam.read()
             frame = cv2.resize(frame, None, fx=1.5, fy=1.5, interpolation=cv2.INTER_AREA)
-            cv2.putText(frame, f"Prediction: {prediction}", (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
+            cv2.putText(frame, f"Prediction: {prediction[0]}        Confindence: {prediction[1]}", (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
             cv2.imshow('Input', frame)
 
             deltaS = (datetime.now() - lastCaptureTime).total_seconds()
@@ -46,10 +46,10 @@ class Main():
                     coordinates = DataSetService.unpack(self.photoProcessor.run(frame, showImages))
                     print(coordinates)
                     prediction = self.classifier.run(coordinates)
-                    print(prediction)
+                    print(prediction[0])
 
                 except Exception as e:
-                    prediction = ""
+                    prediction = ("?", "")
                     print(e)
                 finally:
                     lastCaptureTime = datetime.now()

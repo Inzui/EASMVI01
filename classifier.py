@@ -22,8 +22,10 @@ class Classifier:
             
             normData = self.normalizeInputData(data)
 
-            prediction = self.identifiers[self.model.predict([normData])[0]]
-            return prediction
+            predictionIndex = self.model.predict([normData])[0]
+            predictionProbability = self.model.predict_proba([normData])
+            print(predictionProbability[0])
+            return (self.identifiers[predictionIndex], round(predictionProbability[0][predictionIndex], 3))
 
         else:
             raise Exception("No Model has been created.")
