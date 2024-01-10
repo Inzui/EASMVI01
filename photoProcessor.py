@@ -71,7 +71,7 @@ class PhotoProcessor:
         x2, y2 = jointCoordinates[12][0], jointCoordinates[12][1]
         return math.degrees(math.atan2(y2-y1, x2-x1)) + 90
 
-    def __detectHands(self, image: numpy.ndarray, minDetectionConfidence: float = 0.5, minTrackingConfidence: float = 0.5, maxNumHands: int = 1):
+    def __detectHands(self, image: numpy.ndarray, minDetectionConfidence: float = 0.3, minTrackingConfidence: float = 0.5, maxNumHands: int = 1):
         """
             Detects the hand in the CV2 image using MediaPipe and returns the landmarks.
         """
