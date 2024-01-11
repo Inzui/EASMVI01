@@ -16,7 +16,19 @@ class Classifier:
         self.scalerValues = None
 
     def run(self, data):
-        if(exists(self.filename)):
+        """
+            Load the model and scaler values from files if they exist. Normalize input data, predict the index and probability, and return the identifier and rounded probability.
+
+            Args:
+            - data: Input data to be normalized and predicted.
+
+            Returns:
+            - tuple: A tuple containing the identifier corresponding to the predicted index and the rounded probability of that index.
+
+            Raises:
+            - Exception: If no model file exists.
+        """
+        if (exists(self.filename)):
             self.model = pickle.load(open(self.filename, 'rb'))
             self.scalerValues = np.load("scalers.npy")
             
@@ -37,6 +49,17 @@ class Classifier:
         return retData
 
     def train(self,  DFTrain : pd.DataFrame, DFTest : pd.DataFrame):
+        """ 
+            This method loads the training and testing datasets, cleans the data, splits the data into features (X) and labels (Y) for both training and testing sets. Then, it creates a model using these datasets and saves the model.
+
+            Args:
+            - DFTrain (DataFrame): The training dataset.
+            - DFTest (DataFrame): The testing dataset.
+            
+            Raises:
+            - Exception: If any error occurs during the process. 
+        """
+
         self.DFTrain = DFTrain
         self.DFTest = DFTest
         self.cleanData()
@@ -52,9 +75,19 @@ class Classifier:
         # print(self.getConfusionMatrix(self.model, X_val, Y_val))
 
     def createModel(self, X_train : pd.DataFrame, y_train : pd.DataFrame, X_test : pd.DataFrame, y_test : pd.DataFrame):
+        """
+            Create a Multi-Layer Perceptron (MLP) Classifier model.
+
+            Args:
+            - X_train: Training features.
+            - y_train: Training labels.
+
+            Returns:
+            - mlp: Trained MLPClassifier model.
+        """
         print("Creating Model")
         #mlp = MLPClassifier(activation='relu', solver='adam', random_state=1, hidden_layer_sizes=(550, 300), max_iter=1000, early_stopping=False, warm_start=False)
-        mlp = MLPClassifier(activation='relu', solver='adam', random_state=1, hidden_layer_sizes=(550, 300), max_iter=500, early_stopping=False, warm_start=False)
+        mlp = MLPClassifier(activation='relu', solver='adam', random_state=1, hidden_layer_sizes=(1500, 1000), max_iter=500, early_stopping=False, warm_start=False)
 
         mlp.fit(X_train, y_train)
         print(f"Model Score: {mlp.score(X_test, y_test)}")
@@ -69,6 +102,12 @@ class Classifier:
         pickle.dump(mlp, open(filename, 'wb'))
 
     def cleanData(self):
+        """ 
+            This method cleans the data by converting the identifier column from letters to numbers, normalizing the data, and saving the scaler values for later use.
+
+            Raises:
+            - Exception: If the factorization fails due to invalid identifiers.
+        """
         scaler = MaxAbsScaler()
 
         #Transfer identifier column from letter to number
@@ -85,7 +124,6 @@ class Classifier:
         self.DFTest = pd.DataFrame(scaled, columns=self.DFTest.columns)
 
         np.save("scalers", scaler.scale_)
-
 
         self.DFTrain["identifier"], _ = pd.factorize(self.DFTrain["identifier"])
         self.DFTest["identifier"], _ = pd.factorize(self.DFTest["identifier"])    

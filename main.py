@@ -16,6 +16,25 @@ class Main():
         self.classifier: Classifier = None
 
     def run(self, forceConvert: bool = False, forceTrain: bool = False, showImages: bool = False):
+        """
+            This method performs several tasks including:
+
+            1. Converting images to CSV datasets if they don't exist or if forced to convert.
+                It checks for the existence of training and test datasets and converts pictures to datasets if necessary.
+
+            2. Training a classifier if it doesn't exist or if forced to train.
+                It creates a new classifier and trains it using the loaded training and test datasets.
+
+            3. Capturing video frames from the webcam, processing them, and predicting the coordinates.
+                It opens the webcam, captures frames, resizes them, displays the prediction on the frame, and waits for key presses.
+                It runs the photo processor on the captured frames and makes predictions based on the processed data.
+
+            Args:
+            - forceConvert: Boolean flag indicating whether to force conversion of images to CSV datasets. Default is False.
+            - forceTrain: Boolean flag indicating whether to force training of the classifier. Default is False.
+            - showImages: Boolean flag indicating whether to display intermediate images during processing. Default is False.
+        """
+        
         # Convert pictures to CSV
         if (forceConvert or not self.trainingDataSet.exists()):
             print("Training CSV does not exist.")
@@ -59,6 +78,17 @@ class Main():
                 break
     
     def __picturesToDataSet(self, dataSet: DataSetService):
+        """
+            Converts pictures from a dataset to CSV format.
+
+            This method iterates over directories within a given dataset directory, processes each image file in these directories, 
+            and appends the processed data to the dataset. If any exceptions occur during processing, the problematic image files 
+            are removed from the dataset directory. After processing all images for a particular identifier, the dataset is renumbered.
+
+            Args:
+            - dataSet (DataSetService): The dataset to convert.
+        """
+
         print(f"Converting pictures from '{dataSet.dataSetType}' to CSV.")
         dataSetDir = os.path.join(self.identifiersDir, dataSet.dataSetType)
         dataSet.clear()

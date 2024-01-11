@@ -1,6 +1,8 @@
 <h1>EASMVI01</h1>
 Machine Vision Assignment for the Minor Mechatronics by I. Zuiderent (1004784) & J. van Wamelen (1009652). This application recognizes the right hand and the letters ‘e’, ‘n’, ‘a’, ‘t’, ‘i’, ‘r’, ‘o’, ‘d’, ‘s’, and ‘l’ of the Dutch sign language using your webcam.
 
+[GitHub Repository Link](https://github.com/Inzui/EASMVI01)
+
 <h2>Install required packages</h2>
 
 ```
@@ -9,6 +11,7 @@ $ python -m pip install requirements.txt
 
 
 <h2>Run code</h2>
+
 Code can be run by using the following command:
 
 ```
@@ -22,6 +25,8 @@ $ python main.py -ft
 ```
 
 A list of possible arguments can be requested by using the -h option:
+
+
 ```
 $ python main.py -h
 usage: main.py [-h] [-fc] [-ft] [-si]
@@ -37,3 +42,5 @@ options:
   -si, --showImages    Shows the detected hand with drawn landmarks
                        while running.
 ```
+
+<b>Note: unzip Dataset.zip before running the forceConvert command!</b>
